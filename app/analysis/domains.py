@@ -109,8 +109,6 @@ def spatial_autocorrelation(
             "pip install esda libpysal"
         )
 
-    import numpy as np
-
     coords = adata.obsm["spatial"]
     w = KNN.from_array(coords, k=6)
     w.transform = "r"

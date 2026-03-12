@@ -1,0 +1,50 @@
+project:
+  name: "PhenoCycler Example"
+  output_dir: "output/phenocycler"
+  random_seed: 42
+
+input:
+  path: "data/phenocycler_sample.h5ad"
+  format: h5ad
+  platform: phenocycler
+
+atlas:
+  atlas_id: rira_v1   # Not used for PhenoCycler; clustering-based phenotyping only
+  auto_download: false
+
+preprocessing:
+  min_cells: 3
+  min_genes: 5        # PhenoCycler has far fewer markers
+  max_genes: 10000
+  max_pct_mt: 100.0   # No MT filtering for protein data
+  normalize_total: false
+  log1p: false        # arcsinh is used instead
+
+backend:
+  name: phenocycler
+  device: cpu  # PhenoCycler does not use GPU-intensive training
+
+cell2location:
+  # Not used for PhenoCycler backend
+  N_cells_per_location: 1
+  label_key: "phenotype"
+
+# PhenoCycler-specific parameters (passed through backend config)
+# These would be set via CLI flags or by adding to a custom backend section:
+# phenocycler:
+#   arcsinh_cofactor: 5.0
+#   min_cell_area: 50
+#   max_cell_area: 5000
+#   leiden_resolution: 0.5
+
+qc:
+  enabled: true
+  generate_plots: true
+
+export:
+  formats: [csv, parquet]
+  generate_r_snippet: false  # R snippet not relevant for PhenoCycler
+  save_h5ad: true
+
+logging:
+  level: INFO

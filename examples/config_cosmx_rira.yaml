@@ -1,0 +1,50 @@
+project:
+  name: "CosMx RIRA Example"
+  output_dir: "output/cosmx_rira"
+  random_seed: 42
+
+input:
+  path: "data/cosmx_sample.h5ad"
+  format: h5ad
+  platform: cosmx
+
+atlas:
+  atlas_id: rira_v1
+  auto_download: false
+  cache_dir: "~/.xcell2location/atlas_cache"
+
+preprocessing:
+  min_cells: 3
+  min_genes: 50
+  max_genes: 5000
+  max_pct_mt: 50.0
+  normalize_total: true
+  log1p: true
+
+backend:
+  name: cell2location
+  device: auto
+
+cell2location:
+  N_cells_per_location: 10  # CosMx is cell-resolved; fewer cells per "spot"
+  detection_alpha: 20
+  max_epochs_reference: 250
+  max_epochs_spatial: 10000
+  batch_size: 5000
+  label_key: "cell_type"
+  gene_filter_min_count: 5
+  gene_filter_min_cells: 3
+  # CosMx-specific: aggregate by FOV for region-level deconvolution
+  # Set workflow: region_aggregated in backend if desired
+
+qc:
+  enabled: true
+  generate_plots: true
+
+export:
+  formats: [csv, parquet, json]
+  generate_r_snippet: true
+  save_h5ad: true
+
+logging:
+  level: INFO

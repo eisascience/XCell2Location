@@ -1,0 +1,65 @@
+project:
+  name: "XCell2Location Analysis"
+  output_dir: "output"
+  random_seed: 42
+
+input:
+  path: null
+  format: auto  # auto, h5ad, rds, matrix
+  platform: visium  # visium, visiumhd, cosmx, phenocycler
+
+atlas:
+  atlas_id: rira_v1
+  local_path: null
+  cache_dir: "~/.xcell2location/atlas_cache"
+  auto_download: false
+
+preprocessing:
+  min_cells: 3
+  min_genes: 200
+  max_genes: 6000
+  max_pct_mt: 20.0
+  normalize_total: true
+  log1p: true
+
+backend:
+  name: cell2location  # cell2location, phenocycler
+  device: auto  # auto, cpu, cuda, mps
+
+cell2location:
+  N_cells_per_location: 30
+  detection_alpha: 20
+  max_epochs_reference: 250
+  max_epochs_spatial: 30000
+  batch_size: 2500
+  gene_level_prior:
+    mean: 1.0
+    std: 0.3
+  gene_add_alpha_prior:
+    mean: 1.0
+    std: 0.3
+  batch_key: null
+  label_key: "cell_type"
+  gene_filter_min_count: 10
+  gene_filter_min_cells: 3
+
+qc:
+  enabled: true
+  generate_plots: true
+  save_qc_data: true
+
+export:
+  formats:
+    - csv
+    - parquet
+    - json
+  generate_r_snippet: true
+  save_h5ad: true
+
+runtime:
+  n_threads: 4
+  verbose: true
+
+logging:
+  level: INFO
+  file: null

@@ -1,0 +1,48 @@
+project:
+  name: "Visium RIRA Example"
+  output_dir: "output/visium_rira"
+  random_seed: 42
+
+input:
+  path: "data/visium_sample.h5ad"
+  format: h5ad
+  platform: visium
+
+atlas:
+  atlas_id: rira_v1
+  auto_download: false
+  cache_dir: "~/.xcell2location/atlas_cache"
+
+preprocessing:
+  min_cells: 3
+  min_genes: 200
+  max_genes: 6000
+  max_pct_mt: 20.0
+  normalize_total: true
+  log1p: true
+
+backend:
+  name: cell2location
+  device: auto
+
+cell2location:
+  N_cells_per_location: 30
+  detection_alpha: 20
+  max_epochs_reference: 250
+  max_epochs_spatial: 30000
+  batch_size: 2500
+  label_key: "cell_type"
+  gene_filter_min_count: 10
+  gene_filter_min_cells: 3
+
+qc:
+  enabled: true
+  generate_plots: true
+
+export:
+  formats: [csv, parquet]
+  generate_r_snippet: true
+  save_h5ad: true
+
+logging:
+  level: INFO

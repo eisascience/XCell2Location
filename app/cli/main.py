@@ -19,7 +19,10 @@ app = typer.Typer(
 
 # ── Register sub-app groups ───────────────────────────────────────────────────
 app.add_typer(atlas.app, name="atlas")
+# run_cell2location.app already contains both cell2location and domains sub-commands
 app.add_typer(run_cell2location.app, name="run")
+# Register the standalone domains command into the run group
+run_cell2location.app.command(name="domains")(run_domains.run_domains_cmd)
 
 # ── Register standalone commands ──────────────────────────────────────────────
 app.command(name="import")(import_data.import_cmd)
